@@ -1,0 +1,58 @@
+[includeIf "hasconfig:user.email"]
+    # This section is for backwards compatibility or general settings.
+    # It will be ignored if user.email is set, which it will be in the local file.
+
+# This file MUST be created on each machine and is ignored by Git.
+[include]
+    path = .gitconfig.local
+
+[core]
+    # Use Neovim as the default editor for commit messages, merges, etc.
+    editor = nvim
+
+[init]
+    # Set the default branch name to 'main' instead of the older 'master'
+    defaultBranch = main
+
+[alias]
+    # Status and Staging
+    st = status -sb
+    co = checkout
+    br = branch
+    ci = commit
+    # Stage all tracked files
+    addall = !git add . && git status -sb
+
+    # Logging and History
+    # Beautiful, one-line graphical log history
+    ll = log --oneline --graph --all --decorate
+    # Show history of the current file/path
+    hist = log -p --decorate
+    
+    # Safety and Amendments
+    # Undo the last commit locally, keeping changes staged
+    undo = reset HEAD^
+    # Amend commit message without changing the committed code
+    amend = commit --amend --no-edit
+
+    # Stashing
+    sa = stash push -u # Push stash including untracked files
+    sp = stash pop
+    sl = stash list
+
+[pull]
+    # Use rebase by default for cleaner history
+    rebase = true
+
+[push]
+    # Only push the current branch upstream
+    default = current
+    
+[color]
+    ui = auto
+
+[difftool]
+    # Optional: Configure an external diff viewer (e.g., nvim as the diff tool)
+    prompt = false
+[difftool "nvim"]
+    cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
