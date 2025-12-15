@@ -6,8 +6,12 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-# --- CRITICAL FIX: SOURCE THE UTILITY FILE RELATIVE TO DOTFILES ROOT ---
-source "$(dirname "$(realpath "$0")")/util/install.sh"
+# --- Environment Variable (Assuming the dotfiles repo is always at ~/dotfiles) ---
+DOTFILES_DIR="$HOME/dotfiles"
+
+# --- 0. SOURCING UTILITIES (RELIABLE HARDCODED PATH) ---
+# This ensures 'install_packages' is available
+source "$DOTFILES_DIR/util/install.sh"
 
 
 echo "--- Zsh Module: Installing base packages ---"
@@ -26,7 +30,7 @@ else
     echo "Zinit is already installed."
 fi
 
-# ---  Nerd Font Installation (CRITICAL FOR P10K) ---
+# --- Nerd Font Installation (CRITICAL FOR P10K) ---
 echo "--- Zsh Module: Installing MesloLGS Nerd Font ---"
 
 if command -v brew &> /dev/null; then
@@ -34,9 +38,9 @@ if command -v brew &> /dev/null; then
     echo "Detected Homebrew. Installing MesloLGS NF via Cask..."
     brew install --cask font-meslo-lg-nerd-font
     
-elif [ -d /usr/share/fonts ] || [ -d ~/.local/share/fonts ]; then
+elif command -v wget &> /dev/null && ([ -d /usr/share/fonts ] || [ -d ~/.local/share/fonts ]); then
     # Generic Linux/WSL Manual Install: Download the recommended P10K font
-    echo "Detected Linux environment. Installing MesloLGS NF manually..."
+    echo "Detected Linux environment with wget. Installing MesloLGS NF manually..."
     
     # Define installation directory
     FONT_DIR="$HOME/.local/share/fonts/MesloLGS"
@@ -60,13 +64,14 @@ elif [ -d /usr/share/fonts ] || [ -d ~/.local/share/fonts ]; then
         fc-cache -f -v > /dev/null
     fi
 else
-    echo "Skipping Nerd Font installation: No known package manager (brew) or standard font directories found."
+    echo "Skipping Nerd Font installation: Cannot find Homebrew or necessary tools/directories for manual install."
 fi
 
 echo "--- NOTE: MesloLGS NF has been installed. Please manually set this as the font in your terminal emulator (e.g., iTerm, Terminal, VS Code). ---"
 
 # --- 2. Powerlevel10k Installation ---
 echo "--- Zsh Module: Installing Powerlevel10k theme ---"
+# We define the P10K directory relative to the ZINIT_HOME, as Zinit manages it.
 P10K_DIR="$HOME/.zinit/themes/powerlevel10k"
 
 if [ ! -d "$P10K_DIR" ]; then

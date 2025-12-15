@@ -6,17 +6,20 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-# --- CRITICAL FIX: SOURCE THE UTILITY FILE RELATIVE TO DOTFILES ROOT ---
+# --- Environment Variable (Assuming the dotfiles repo is always at ~/dotfiles) ---
+DOTFILES_DIR="$HOME/dotfiles"
+
+# --- 0. SOURCING UTILITIES (RELIABLE HARDCODED PATH) ---
 # This ensures 'install_packages' is available
-source "$(dirname "$(realpath "$0")")/util/install.sh"
+source "$DOTFILES_DIR/util/install.sh"
 
 
-echo "--- Vim Module: Installing base packages ---"
-# Install vim or neovim based on system preference (assuming this is handled by setup.sh now)
-# We can include it here for module-level isolation if needed, but setup.sh already runs it:
-# install_packages vim 
+# --- 1. INSTALL THE EDITOR (NEOVIM) ---
+echo "--- Vim Module: Installing Neovim (nvim) ---"
+install_packages neovim
 
-# --- 1. Install Amix Awesome Vimrc ---
+
+# --- 2. Install Amix Awesome Vimrc ---
 VIM_RUNTIME="$HOME/.vim_runtime"
 
 echo "--- Vim Module: Installing Amix Awesome Vimrc ---"
@@ -35,14 +38,14 @@ else
 fi
 
 
-# --- 2. Link Custom Configuration (Respecting Amix Structure) ---
+# --- 3. Link Custom Configuration (Respecting Amix Structure, RELIABLE HARDCODED PATH) ---
 echo "--- Vim Module: Linking custom configs into ~/.vim_runtime ---"
 
 # The Amix installer requires the custom configuration to be at:
 # ~/.vim_runtime/my_configs.vim
 
-# 1. Define the source file path (in your dotfiles repo)
-SOURCE_CONFIG="$(dirname "$(realpath "$0")")/vim/my_configs.vim"
+# 1. Define the source file path (using the reliable hardcoded HOME path)
+SOURCE_CONFIG="$DOTFILES_DIR/vim/my_configs.vim"
 
 # 2. Define the target link path (inside the installed runtime dir)
 CUSTOM_VIM_CONFIG="$HOME/.vim_runtime/my_configs.vim"
@@ -50,8 +53,7 @@ CUSTOM_VIM_CONFIG="$HOME/.vim_runtime/my_configs.vim"
 
 # Create a symbolic link from your dotfiles repository to the required location.
 # -s: creates a symbolic link
-# -F: removes the destination path if it is a directory (needed if Amix created a placeholder)
-# -f: removes the destination path if it exists and is a file
+# -f: removes the destination path if it exists and is a file or link
 if [ -L "$CUSTOM_VIM_CONFIG" ]; then
     echo "Existing custom link found. Removing old link..."
     rm "$CUSTOM_VIM_CONFIG"

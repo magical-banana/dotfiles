@@ -7,12 +7,12 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 export ZSH="$HOME/.oh-my-zsh"
-export EDITOR=vim
-export KUBE_EDITOR=vim
+export EDITOR='nvim'
+export VISUAL='nvim'
+export KUBE_EDITOR='nvim'
+
 export KUBECONFIG=~/.kube/config
 export PATH=$PATH:/usr/local/go/bin
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
@@ -68,4 +68,5 @@ source $ZSH/oh-my-zsh.sh
 alias kcc="kubectl config use-context"
 alias ll='ls -lha --color=auto'
 alias py=python3
+alias vim='nvim'
 [ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases
