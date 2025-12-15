@@ -35,13 +35,14 @@ zinit light "$ZINIT_HOME/themes/powerlevel10k"
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
-
+zinit light Aloxaf/fzf-tab
 
 # 1. OMZ Core Git Library (needed for many OMZ features/prompts to work)
 zinit snippet OMZL::git.zsh
+zinit snippet OMZP::sudo
+zinit snippet OMZP::command-not-found
 
 # 2. DevOps & Developer Plugins
-zinit snippet OMZP::git
 zinit snippet OMZP::docker
 zinit snippet OMZP::colored-man-pages
 zinit snippet OMZP::web-search
@@ -50,7 +51,8 @@ zinit snippet OMZP::aws
 
 # Enable history search (ctrl-R) for easier command lookup
 bindkey '^R' history-incremental-search-backward
-
+bindkey '^P' up-line-or-search # Use Ctrl+P for command history search
+bindkey '^N' down-line-or-search # Use Ctrl+N for command history search
 # Recommended Aliases for DevOps Efficiency
 
 
@@ -66,4 +68,4 @@ source $ZSH/oh-my-zsh.sh
 alias kcc="kubectl config use-context"
 alias ll='ls -lha --color=auto'
 alias py=python3
-[ -f ~/.kubectl_aliases.txt ] && source ~/.kubectl_aliases.txt
+[ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases
