@@ -69,4 +69,5 @@ alias kcc="kubectl config use-context"
 alias ll='ls -lha --color=auto'
 alias py=python3
 alias vim='nvim'
+alias vi='nvim'
 [ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases

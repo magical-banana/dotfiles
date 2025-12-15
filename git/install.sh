@@ -19,16 +19,16 @@ install_packages git
 # --- 1. ENFORCE CREATION OF MACHINE-SPECIFIC LOCAL CONFIG ---
 
 # Define the FINAL Stow target path
-LOCAL_CONFIG_FILE="$HOME/.gitconfig.local"
+DOTFILE_CONFIG_FILE="$DOTFILES_DIR/git/.gitconfig.local"
 
 # Check if the file exists and if it contains the required [user] header
-if [ ! -f "$LOCAL_CONFIG_FILE" ] || ! grep -q "user" "$LOCAL_CONFIG_FILE"; then
+if [ ! -f "$DOTFILE_CONFIG_FILE" ] || ! grep -q "user" "$DOTFILE_CONFIG_FILE"; then
     echo " "
     echo "========================================================================================="
     echo "!!! CRITICAL SETUP FAILURE: GIT IDENTITY REQUIRED !!!"
     echo " "
     echo "To proceed, you MUST define your machine-specific Git identity."
-    echo "1. Create the file: $LOCAL_CONFIG_FILE"
+    echo "1. Create the file: $DOTFILE_CONFIG_FILE"
     echo "2. Add your unique user.name and user.email to it:"
     
     # Print the required template content
@@ -43,6 +43,6 @@ EOF
     exit 1 # Exit with error code 1 to halt the main setup script
 fi
 
-echo "--- Git Module: Local identity file ($LOCAL_CONFIG_FILE) found. Proceeding. ---"
+echo "--- Git Module: Dotfile local identity file ($DOTFILE_CONFIG_FILE) found. Proceeding. ---"
 
 echo "--- Git Module: Installation complete. Stow will deploy .gitconfig and .gitconfig.local next. ---"
