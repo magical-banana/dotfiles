@@ -23,7 +23,7 @@ The repo is split into modular scripts to ensure that installation is "all or no
 On a brand new Linux or WSL2 instance, run the following:
 
 ```bash
-git clone https://github.com/your-username/banana-dotfiles.git ~/dotfiles
+git clone https://github.com/magical-banana/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 chmod +x setup.sh
 ./setup.sh
@@ -86,7 +86,7 @@ Simply pull the latest changes and run the setup again. It will only update what
 **To remove the setup:**
 
 ```bash
-./scripts/cleanup.sh
+./cleanup.sh
 
 ```
 
