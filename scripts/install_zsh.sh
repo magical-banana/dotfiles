@@ -2,7 +2,7 @@
 echo "🐚 Configuring Shell & Plugins..."
 
 # Change shell to Zsh
-[ "$SHELL" != "$(which zsh)" ] && chsh -s "$(which zsh)"
+[ "$SHELL" != "$(which zsh)" ] && sudo chsh -s $(which zsh) $USER
 
 # Setup Zinit (Plugin Manager)
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
