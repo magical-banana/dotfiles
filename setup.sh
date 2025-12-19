@@ -12,19 +12,25 @@ run_step() {
 }
 
 echo "🚀 System Provisioning..."
-
-# Run the modular pieces
 run_step "scripts/install_sys_deps.sh"
 run_step "scripts/install_mise.sh"
-run_step "scripts/install_zsh.sh"
-run_step "scripts/setup_git.sh"
 
-# Final Sync: 'stow -R' (Restow) is the secret to updates.
-# It removes old symlinks and adds new ones in one go.
 echo "🔄 Refreshing Symlinks..."
 cd ~/dotfiles
 stow -R git
 stow -R zsh
 stow -R mise
 stow -R starship
+stow -R vim
+
+# Install tools in mise/.config/mise/config.toml
+mise install -y
+mise reshim
+
+# Install modular scripts
+echo "🚀 Modulars and dependencies provisioning..."
+run_step "scripts/install_zsh.sh"
+run_step "scripts/setup_git.sh"
+run_step "scripts/setup_vim.sh"
+
 echo "✨ All tools installed and configs synced!"
