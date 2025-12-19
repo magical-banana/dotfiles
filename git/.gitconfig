@@ -8,7 +8,7 @@
 
 [core]
     # Use Neovim as the default editor for commit messages, merges, etc.
-    editor = nvim
+    editor = vim
 
 [init]
     # Set the default branch name to 'main' instead of the older 'master'
@@ -52,7 +52,7 @@
     ui = auto
 
 [difftool]
-    # Optional: Configure an external diff viewer (e.g., nvim as the diff tool)
+    # Optional: Configure an external diff viewer (e.g., vim as the diff tool)
     prompt = false
-[difftool "nvim"]
-    cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+[difftool "vim"]
+    cmd = vim -d \"$LOCAL\" \"$REMOTE\"
