@@ -1,39 +1,64 @@
 #!/bin/bash
-echo "🧹 Starting Dotfiles Cleanup..."
+set -e
 
-# 1. Unstow Configs (Removes symlinks)
-echo "🔗 Removing Symlinks..."
-cd ~/dotfiles
-stow -D zsh
-stow -D mise
-stow -D vscode
+echo "(Cleaning) Dotfiles..."
 
-# 2. Purge Mise Tools & Engine
+# 1. Identify Dotfiles Directory
+DOTFILES_DIR="$HOME/dotfiles"
+cd "$DOTFILES_DIR"
+
+# 2. Unstow Configs
+echo "🔗 Removing Symlinks via Stow..."
+# Removed 'vim' from the stow list since you want it gone
+for folder in zsh mise starship git; do
+    if [ -d "$folder" ]; then
+        stow -D "$folder"
+    else
+        echo "⚠️  Folder $folder not found, skipping."
+    fi
+done
+
+# 3. Purge Mise Data (Tools & Plugins)
 if command -v mise &> /dev/null; then
-    echo "🛠️ Removing Mise-installed tools..."
-    # This removes all installed versions of Go, Python, etc.
-    rm -rf ~/.local/share/mise/installs
-    rm -rf ~/.local/share/mise/shims
-    
-    # Optional: If you want to remove the Mise binary itself
-    # rm -rf ~/.local/share/mise/bin
+    echo "🛠️  Purging Mise data..."
+    # This removes the vim plugin and all installed vim versions
+    mise plugins uninstall vim || true
+    rm -rf ~/.local/share/mise
+    rm -rf ~/.cache/mise
 fi
 
-# 3. Clean Shell Data (Zinit & P10k)
-echo "🐚 Purging Zsh plugin data..."
+# 4. Deep Clean Vim & Plugins
+echo "📝 Purging Vim configuration and plugins..."
+# Remove standard config files
+rm -rf ~/.vim
+rm -f ~/.vimrc
+rm -f ~/.viminfo
+
+# Remove Neovim/Vim modern data paths (where plugins often live)
+rm -rf ~/.local/share/nvim
+rm -rf ~/.local/state/nvim
+rm -rf ~/.config/nvim
+
+# Remove Vim-Plug or other plugin manager data
+rm -rf ~/.vim/bundle
+rm -rf ~/.vim/autoload
+
+# 5. Clean Shell & Starship Data
+echo "🐚 Purging Shell & Prompt data..."
 rm -rf ~/.local/share/zinit
 rm -rf ~/.cache/p10k-instant-prompt-*
 rm -f ~/.p10k.zsh
+rm -f ~/.zshrc
+rm -rf ~/.cache/starship
 
-# 4. Remove VS Code Extensions (Optional)
-# This lists all extensions and uninstalls them one by one
+# 6. Remove VS Code Extensions
 if command -v code &> /dev/null; then
     echo "💻 Uninstalling VS Code extensions..."
-    code --list-extensions | xargs -L 1 code --uninstall-extension
+    code --list-extensions 2>/dev/null | xargs -I {} code --uninstall-extension {}
 fi
 
-# 5. Final verification of stray links
-echo "🔍 Checking for stray symlinks in home..."
-find ~ -maxdepth 1 -xtype l -delete
+# 7. Final verification
+echo "🔍 Deleting broken symlinks in home..."
+find ~ -maxdepth 2 -xtype l -delete
 
-echo "✅ Cleanup complete. System is now back to (mostly) stock."
+echo "✅ Cleanup complete. Vim and all tools have been removed."
