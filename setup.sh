@@ -22,6 +22,7 @@ run_step "scripts/install_zsh.sh"
 # It removes old symlinks and adds new ones in one go.
 echo "🔄 Refreshing Symlinks..."
 cd ~/dotfiles
+stow -R git
 stow -R zsh
 stow -R mise
 stow -R starship
