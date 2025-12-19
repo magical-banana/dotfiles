@@ -1,8 +1,0 @@
-[user]
-    # MACHINE-SPECIFIC IDENTITY:
-    name = [Your Full Name for THIS Machine]
-    email = [Your Email for THIS Machine]
-
-[githooks]
-    # Optional: Machine-specific hook path, if needed
-    # path = /usr/local/share/githooks

@@ -1,73 +1,49 @@
-# ====================================================================
-# 1. P10K INSTANT PROMPT (Must be at the top for speed)
-# ====================================================================
-# Enable Powerlevel10k instant prompt.
+# P10K Instant Prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-export ZSH="$HOME/.oh-my-zsh"
-export EDITOR='nvim'
-export VISUAL='nvim'
-export KUBE_EDITOR='nvim'
+# Path & Mise Activation
+export PATH="$HOME/.local/bin:$PATH"
+eval "$(mise activate zsh)"
 
-export KUBECONFIG=~/.kube/config
-export PATH=$PATH:/usr/local/go/bin
+# Golang
+export GOPATH="$HOME/.local/share/go"
+export GOBIN="$GOPATH/bin"
+export PATH="$GOBIN:$PATH"
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# Editors
+export EDITOR='vi'
+export VISUAL='vi'
+export KUBE_EDITOR='vi'
 
-# ====================================================================
-# 3. ZINIT PLUGIN CONFIGURATION (Lazy Loading)
-# ====================================================================
-ZINIT_HOME="$HOME/.zinit"
-# *** CORRECT SOURCE PATH ***
-if [[ ! -f $ZINIT_HOME/zinit.zsh ]]; then
-    print -P "%F{33}Zinit not found. Please run setup.sh.%f"
-else
-    # The source path changes to be directly inside $ZINIT_HOME
-    source "$ZINIT_HOME/zinit.zsh"
-fi
+# Zinit & Plugins
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "$ZINIT_HOME/zinit.zsh"
 
-# Use zinit to load Powerlevel10k, enabling prompt theming
-zinit light "$ZINIT_HOME/themes/powerlevel10k"
-
-# Zsh-Users Plugins (These are full repositories, use zinit light)
+zinit ice depth=1; zinit light romkatv/powerlevel10k
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
 zinit light Aloxaf/fzf-tab
 
-# 1. OMZ Core Git Library (needed for many OMZ features/prompts to work)
-zinit snippet OMZL::git.zsh
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
-
-# 2. DevOps & Developer Plugins
-zinit snippet OMZP::docker
 zinit snippet OMZP::colored-man-pages
 zinit snippet OMZP::web-search
+
+# DevOps Snippets
+zinit snippet OMZL::git.zsh
+zinit snippet OMZP::docker
+zinit snippet OMZP::kubectl
 zinit snippet OMZP::terraform
-zinit snippet OMZP::aws
 
-# Enable history search (ctrl-R) for easier command lookup
+# History & Keybinds
 bindkey '^R' history-incremental-search-backward
-bindkey '^P' up-line-or-search # Use Ctrl+P for command history search
-bindkey '^N' down-line-or-search # Use Ctrl+N for command history search
-# Recommended Aliases for DevOps Efficiency
 
-
-source $ZSH/oh-my-zsh.sh
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-
-# ====================================================================
-# 4. CUSTOM SETTINGS & ALIASES 
-# ====================================================================
+# Aliases
 alias kcc="kubectl config use-context"
 alias ll='ls -lha --color=auto'
-alias py=python3
-alias vim='nvim'
-alias vi='nvim'
-[ -f ~/.kubectl_aliases ] && source ~/.kubectl_aliases
+alias py='python3'
+alias vi='vim'
+# P10K Config Source
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

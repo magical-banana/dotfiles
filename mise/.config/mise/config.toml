@@ -1,0 +1,20 @@
+[tools]
+# DevOps Tools
+k9s = "latest"
+aws-cli = "latest"
+kubectl = "latest"
+terraform = "latest"
+helm = "latest"
+
+# Languages & Runtimes
+go = "1.25.5" 
+node = "lts"      
+python = "3.12"   
+
+# CLI Power Tools
+vim = "latest"
+fzf = "latest"
+ripgrep = "latest"  
+starship = "latest"
+usage = "latest"
+

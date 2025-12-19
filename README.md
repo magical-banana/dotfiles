@@ -1,99 +1,98 @@
-# Dotfiles
+# 🍌 Banana Dotfiles
 
-This repository manages my personal configuration files (dotfiles), using **GNU Stow** for symbolic linking.
-This setup is optimized for speed, featuring Powerlevel10k for a sleek look, and includes essential plugins for Git, Docker, and Kubernetes.
+**Modular | Idempotent | DevOps-Focused**
 
-## Features
+A "one-command" setup for a professional DevOps environment on Linux (Ubuntu/Fedora) and WSL2. This repository manages system dependencies, cloud-native binaries, and a unified shell experience, optimized for use with **VS Code**.
 
-- **Zsh:** Primary shell environment.
-- **Zinit:** Fast, asynchronous plugin manager for Zsh.
-- **Powerlevel10k:** High-performance, highly customizable Zsh prompt theme.
-- **GNU Stow:** Used to manage symbolic links from the repository to the `$HOME` directory.
-- **DevOps Focus:** Includes essential aliases and auto-completion for `kubectl`, `docker`, `terraform`, and `git`.
-- **Nerd Fonts:** Automated installation of MesloLGS NF for proper icon display.
+---
 
-## 🛠️ Installation Guide
+## 🏗️ Architecture
 
-This guide assumes your repository is cloned to `~/dotfiles`.
+The repo is split into modular scripts to ensure that installation is "all or nothing" and safe to run multiple times.
 
-### 1. Clone the Repository
+- **Engine:** [Mise-en-place](https://mise.jdx.dev/) (Tool version management)
+- **Shell:** Zsh + [Zinit](https://github.com/zdharma-continuum/zinit) (High-speed plugin management)
+- **Prompt:** Powerlevel10k (Visual context for K8s/Git)
+- **Symlinks:** GNU Stow
+- **Editor:** VS Code (configured to use Mise shims)
 
-Clone this repository to your home directory.
+---
 
-```bash
-git clone https://github.com/magical-banana/dotfiles.git ~/dotfiles
-```
+## 🚀 Quick Start (Fresh Install)
 
-### 2\. Run the Setup Script
-
-The `setup.sh` script is the main orchestrator. It handles installing core dependencies (`git`, `stow`, `wget`), installing Zsh and Zinit, installing the recommended Nerd Font, and deploying configurations via Stow.
+On a brand new Linux or WSL2 instance, run the following:
 
 ```bash
+git clone https://github.com/your-username/banana-dotfiles.git ~/dotfiles
 cd ~/dotfiles
-# Make sure the script is executable
-chmod +x setup.sh zsh/install.sh vim/install.sh util/install.sh
-
-# Run the full setup
+chmod +x setup.sh
 ./setup.sh
-```
-
-_Note: The script may require `sudo` privileges to install system packages (like Zsh) via `apt` or `dnf`._
-
-### 3\. Final Step
-
-- **Restart:** Open a new terminal tab/window to complete the Zinit plugin loading.
-
-## 📂 Repository Structure
-
-The repository uses one directory per configuration file or tool (`zsh`, `vim`, etc.), which is the standard structure required by GNU Stow.
 
 ```
-~/dotfiles/
-├── setup.sh                 <-- The main orchestration script to run.
-├── README.md                <-- This documentation file.
-|
-├── util/
-│   └── install.sh           <-- Defines the shared 'install_packages' function.
-|
-├── zsh/
-│   ├── install.sh           <-- Installs Zinit, P10k, and Nerd Fonts.
-│   ├── .zshrc               <-- Main Zsh config and plugin declarations (Zinit).
-│   ├── .zsh-pre-init        <-- Zinit bootstrap file (sourced by .zshrc).
-│   └── .p10k.zsh            <-- Your custom Powerlevel10k theme configuration.
-|
-├── vim/
-│   ├── install.sh           <-- Installs Vim/NeoVim package.
-│   └── .vimrc               <-- Your Vim configuration.
-|
-└── ... (Other modules like .gitconfig, .inputrc, etc.)
-```
 
-## ⚙️ Key Modules and Configurations
+### What happens under the hood?
 
-### Zsh and Zinit
+1. **`install_sys_deps.sh`**: Detects OS (Apt/Dnf) and installs `git`, `curl`, `stow`, and `build-essential`.
+2. **`install_mise.sh`**: Bootstraps the Mise engine and installs **Go, Python, Terraform, Kubectl, Helm, and K9s**.
+3. **`install_zsh.sh`**: Changes default shell to Zsh and bootstraps Zinit with P10k.
+4. **`stow`**: Symlinks all configs into your `$HOME` directory.
 
-The core of the environment relies on the Zinit loading process defined in the `.zshrc` and `.zsh-pre-init` files. Plugins are loaded using `zinit light` or `zinit snippet` for OMZ plugins:
+---
 
-- `zsh-autosuggestions`
-- `zsh-syntax-highlighting`
-- OMZ plugins: `git`, `docker`, `kubectl`, `terraform`, `aws`, etc.
+## 🛠️ Included Tools
 
-### GNU Stow
+Managed via `mise/config.toml`:
 
-When you run `./setup.sh`, the Stow phase executes commands like:
+| Tool          | Purpose                      | Source        |
+| ------------- | ---------------------------- | ------------- |
+| **Kubectl**   | K8s Cluster Management       | Mise (Latest) |
+| **Terraform** | IaC (Infrastructure as Code) | Mise (Latest) |
+| **K9s**       | Full-screen K8s TUI          | Mise (Latest) |
+| **Go**        | Backend Development          | Mise (Latest) |
+| **FZF**       | Fuzzy Finder for CLI         | Mise (Latest) |
+| **Ripgrep**   | Ultra-fast search            | Mise (Latest) |
 
-```bash
-stow -t $HOME zsh
-stow -t $HOME vim
-# ... and so on
-```
+---
 
-This creates symbolic links from your repository into your `$HOME` directory, such as:
+## 📁 Repository Structure
 
-```
-~/.zshrc  ->  ~/dotfiles/zsh/.zshrc
+```text
+.
+├── scripts/           # The "Brains": Modular bash scripts
+│   ├── install_sys_deps.sh
+│   ├── install_mise.sh
+│   └── install_zsh.sh
+├── zsh/               # Zshrc, P10k, and DevOps aliases
+├── mise/              # Global tool versions (config.toml)
+├── starship/          # Cross-shell prompt config
+├── vscode/            # IDE settings and extension lists
+├── setup.sh           # Main entry point
+└── cleanup.sh         # The "Nuke" script
+
 ```
 
 ---
 
-Happy Hacking\!
+## 🧹 Maintenance
+
+**To update your tools and configs:**
+Simply pull the latest changes and run the setup again. It will only update what is missing.
+
+```bash
+./setup.sh
+
+```
+
+**To remove the setup:**
+
+```bash
+./scripts/cleanup.sh
+
+```
+
+---
+
+## 💡 VS Code Integration
+
+To make VS Code use your Mise-managed tools, ensure the **Mise extension** is installed and your `settings.json` points to the shims:
+`"go.alternateTools": { "go": "~/.local/share/mise/shims/go" }`
