@@ -38,6 +38,8 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::terraform
 
 # History & Keybinds
+SAVEHIST=10000  # Save most-recent 10000 lines
+HISTFILE="${HOME}/.zsh_history"
 bindkey '^R' history-incremental-search-backward
 
 # Aliases
@@ -45,5 +47,6 @@ alias kcc="kubectl config use-context"
 alias ll='ls -lha --color=auto'
 alias py='python3'
 alias vi='vim'
+
 # P10K Config Source
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

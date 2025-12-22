@@ -1,22 +1,27 @@
 #!/bin/bash
 
+export RED='\033[0;31m'
+export NC='\033[0m'
+
 # Define filenames
 EXAMPLE_FILE="$HOME/dotfiles/git/.gitconfig.local.example"
 TARGET_FILE="$HOME/.gitconfig.local"
 
+echo "⚙️  Configuring Git..."
+
 # 1. Check if .gitconfig already exists
 if [ -f "$TARGET_FILE" ]; then
-    echo "Existing $TARGET_FILE found. Skipping setup."
+    echo "✅ Existing $TARGET_FILE found. Skipping setup."
     exit 0
 fi
 
 # 2. Check if the example file exists to copy from
 if [ ! -f "$EXAMPLE_FILE" ]; then
-    echo "Error: $EXAMPLE_FILE not found!"
+    echo "${RED}❌ Error: $EXAMPLE_FILE not found!${NC}"
     exit 1
 fi
 
-echo "Setting up your git identity..."
+echo "ℹ️  Setting up your git identity..."
 
 # 3. Prompt for user details
 read -p "Enter your Full Name: " git_name
@@ -31,4 +36,4 @@ cp "$EXAMPLE_FILE" "$TARGET_FILE"
 sed -i "s/\[Your Full Name for THIS Machine\]/$git_name/" "$TARGET_FILE"
 sed -i "s/\[Your Email for THIS Machine\]/$git_email/" "$TARGET_FILE"
 
-echo "Success! $TARGET_FILE has been created with your identity."
+echo "✅ Success! $TARGET_FILE has been created with your identity."
