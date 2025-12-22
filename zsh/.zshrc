@@ -7,6 +7,9 @@ fi
 export PATH="$HOME/.local/bin:$PATH"
 eval "$(mise activate zsh)"
 
+# Starship
+eval "$(starship init zsh)"
+
 # Golang
 export GOPATH="$HOME/.local/share/go"
 export GOBIN="$GOPATH/bin"
