@@ -40,7 +40,8 @@ zinit snippet OMZP::terraform
 # History & Keybinds
 SAVEHIST=10000  # Save most-recent 10000 lines
 HISTFILE="${HOME}/.zsh_history"
-bindkey '^R' history-incremental-search-backward
+source <(fzf --zsh)
+bindkey '^R' fzf-history-widget 
 
 # Aliases
 alias kcc="kubectl config use-context"

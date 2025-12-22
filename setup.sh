@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# 1. Exit on error and pipe failures
+# Exit on error and pipe failures
 set -eo pipefail
 
-# 2. Define Variables for consistency
 DOTFILES_ROOT="$HOME/dotfiles"
 LOG_FILE="/tmp/dotfiles_install.log"
+export PATH="$HOME/.local/bin:$PATH"
 
 # Colors for UI
 export BOLD='\033[1;32m'
@@ -13,7 +13,7 @@ export BLUE='\033[0;34m'
 export RED='\033[0;31m'
 export NC='\033[0m'
 
-# 3. Enhanced Run Function
+# Enhanced Run Function
 run_step() {
     local script_path="$1"
     echo -e "${BLUE}➡️  Running: $script_path${NC}"
