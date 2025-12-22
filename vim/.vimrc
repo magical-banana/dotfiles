@@ -73,7 +73,6 @@ set listchars=tab:▸\ ,trail:·
 
 " Lightline config (makes it look nice)
 set laststatus=2
-colorscheme catppuccin_mocha
 let g:lightline = {'colorscheme': 'catppuccin_mocha'}
 
 " Ignore Go version warning"
