@@ -63,3 +63,4 @@ run_step "scripts/setup_vim.sh"
 run_step "scripts/install_tmux.sh"
 
 echo -e "${BOLD}✨ Setup Complete!${NC}"
+echo -e "${BOLD}✨ Run 'source ~/.zshrc' or open a new terminal to complete the setup${NC}!"
