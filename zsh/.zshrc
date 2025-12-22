@@ -7,9 +7,6 @@ fi
 export PATH="$HOME/.local/bin:$PATH"
 eval "$(mise activate zsh)"
 
-# Starship
-eval "$(starship init zsh)"
-
 # Golang
 export GOPATH="$HOME/.local/share/go"
 export GOBIN="$GOPATH/bin"
@@ -54,3 +51,4 @@ alias vi='vim'
 
 # P10K Config Source
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+

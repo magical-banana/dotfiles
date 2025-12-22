@@ -22,7 +22,6 @@ Mise ensures that the exact same versions of these tools are used across your WS
 
 ### **CLI Power Tools**
 * **Search:** `fzf` (Fuzzy Finder) and `ripgrep` (Fast Search).
-* **UI:** `starship` (Cross-shell prompt).
 
 ---
 

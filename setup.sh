@@ -44,7 +44,7 @@ run_step "scripts/install_sys_deps.sh"
 run_step "scripts/install_mise.sh"
 
 echo -e "${BOLD}🔄 Refreshing Symlinks...${NC}"
-stow -v -R -t "$HOME" -d "$DOTFILES_ROOT" git zsh mise starship vim tmux 2>&1 | sed 's/^/    │ /'
+stow -v -R -t "$HOME" -d "$DOTFILES_ROOT" git zsh mise vim tmux 2>&1 | sed 's/^/    │ /'
 echo "✅ Symlinks refresh complete." | sed 's/^/    │ /'
 
 # Ensure Mise is ready for the rest of the script

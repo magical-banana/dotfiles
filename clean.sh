@@ -10,7 +10,7 @@ cd "$DOTFILES_DIR"
 # 2. Unstow Configs
 echo "🔗 Removing Symlinks via Stow..."
 # Removed 'vim' from the stow list since you want it gone
-for folder in zsh mise starship git; do
+for folder in zsh mise git; do
     if [ -d "$folder" ]; then
         stow -D "$folder"
     else

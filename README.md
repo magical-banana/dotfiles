@@ -64,7 +64,6 @@ Managed via `mise/config.toml`:
 │   └── install_zsh.sh
 ├── zsh/               # Zshrc, P10k, and DevOps aliases
 ├── mise/              # Global tool versions (config.toml)
-├── starship/          # Cross-shell prompt config
 ├── vscode/            # IDE settings and extension lists
 ├── setup.sh           # Main entry point
 └── cleanup.sh         # The "Nuke" script
