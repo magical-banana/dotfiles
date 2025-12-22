@@ -44,8 +44,7 @@ run_step "scripts/install_sys_deps.sh"
 run_step "scripts/install_mise.sh"
 
 echo -e "${BOLD}🔄 Refreshing Symlinks...${NC}"
-# Use -d to specify the target directory explicitly so 'cd' isn't needed
-stow -v -R -t "$HOME" -d "$DOTFILES_ROOT" git zsh mise starship vim 2>&1 | sed 's/^/    │ /'
+stow -v -R -t "$HOME" -d "$DOTFILES_ROOT" git zsh mise starship vim tmux 2>&1 | sed 's/^/    │ /'
 echo "✅ Symlinks refresh complete." | sed 's/^/    │ /'
 
 # Ensure Mise is ready for the rest of the script
@@ -61,5 +60,6 @@ run_step "scripts/install_fonts.sh"
 run_step "scripts/install_zsh.sh"
 run_step "scripts/setup_git.sh"
 run_step "scripts/setup_vim.sh"
+run_step "scripts/install_tmux.sh"
 
 echo -e "${BOLD}✨ Setup Complete!${NC}"
