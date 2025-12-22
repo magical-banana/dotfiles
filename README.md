@@ -40,7 +40,7 @@ Ensure you have a **Nerd Font** installed in your Terminal Emulator (e.g., Windo
 
 ### 2. Installation
 ```bash
-git clone [https://github.com/magical-banana/dotfiles.git](https://github.com/magical-banana/dotfiles.git) ~/dotfiles
+git clone https://github.com/magical-banana/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./setup.sh
 

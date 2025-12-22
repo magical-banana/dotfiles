@@ -1,56 +1,118 @@
 #!/bin/bash
 set -e
 
-echo "🧹 (Cleaning) Banana Dotfiles & Theming..."
-
-# 1. Identify Dotfiles Directory
+# --- Configuration & Paths ---
 DOTFILES_DIR="$HOME/dotfiles"
-cd "$DOTFILES_DIR"
+BACKUP_DIR="/tmp/banana_backup_$(date +%Y%m%d_%H%M%S)"
+CLEAN_ALL=false
+TARGET_MODULE=""
 
-# 2. Unstow Configs
-# Added 'tmux' and 'starship' back to the list to ensure symlinks are cleared
-echo "🔗 Removing Symlinks via GNU Stow..."
-for folder in zsh mise git tmux starship; do
-    if [ -d "$folder" ]; then
-        stow -D "$folder"
-    else
-        echo "⚠️  Folder $folder not found, skipping."
-    fi
+# --- 1. Modular Cleanup Logic ---
+
+purge_zsh() {
+    # Added explicit hidden files and zinit data
+    local PATHS=( "$HOME/.zshrc" "$HOME/.p10k.zsh" "$HOME/.local/share/zinit" )
+    backup_and_remove "Zsh" "${PATHS[@]}"
+    stow -D zsh 2>/dev/null || true
+}
+
+purge_vim() {
+    # Added .vimrc and common data paths
+    local PATHS=( "$HOME/.vimrc" "$HOME/.vim" "$HOME/.config/nvim" "$HOME/.local/share/nvim" )
+    backup_and_remove "Vim" "${PATHS[@]}"
+}
+
+purge_mise() {
+    local PATHS=( "$HOME/.local/share/mise" "$HOME/.cache/mise" )
+    backup_and_remove "Mise" "${PATHS[@]}"
+    stow -D mise 2>/dev/null || true
+}
+
+purge_tmux() {
+    local PATHS=( "$HOME/.tmux.conf" "$HOME/.tmux/plugins" )
+    backup_and_remove "Tmux" "${PATHS[@]}"
+    stow -D tmux 2>/dev/null || true
+}
+
+purge_starship() {
+    local PATHS=( "$HOME/.config/starship.toml" "$HOME/.cache/starship" )
+    backup_and_remove "Starship" "${PATHS[@]}"
+    stow -D starship 2>/dev/null || true
+}
+
+# --- 2. Robust Helper Functions ---
+
+backup_and_remove() {
+    local label=$1
+    shift
+    local targets=("$@")
+    
+    echo -e "\n🧹 Purging $label..."
+    local module_backup_dir="$BACKUP_DIR/$label"
+    mkdir -p "$module_backup_dir"
+    
+    for item in "${targets[@]}"; do
+        if [ -e "$item" ] || [ -L "$item" ]; then
+            echo "  -> Backing up: $item"
+            # Use -a (archive) to preserve attributes and -R to handle directories/files correctly
+            # We copy to the module folder to avoid nested "home/user" structures
+            cp -aL "$item" "$module_backup_dir/" 2>/dev/null || true
+            rm -rf "$item"
+            echo "  -> Removed: $item"
+        else
+            echo "  -- Skipped (Not found): $item"
+        fi
+    done
+}
+
+show_help() {
+    echo "Usage: ./clean.sh [OPTIONS]"
+    echo "Options:"
+    echo "  --all          Clean everything"
+    echo "  --target [mod] Clean specific (zsh|vim|mise|tmux|starship)"
+    echo "  --help         Show this help"
+}
+
+# --- 3. Argument Parsing ---
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --all) CLEAN_ALL=true ;;
+        --target) TARGET_MODULE="$2"; shift ;;
+        --help) show_help; exit 0 ;;
+        *) echo "Unknown parameter: $1"; show_help; exit 1 ;;
+    esac
+    shift
 done
 
-# 3. Purge Mise Data (Tools & Plugins)
-if command -v mise &> /dev/null; then
-    echo "🛠️  Purging Mise runtimes and plugins..."
-    # Removes installed versions and the internal mise database
-    rm -rf ~/.local/share/mise
-    rm -rf ~/.cache/mise
+# --- 4. Main Execution ---
+
+if [ "$CLEAN_ALL" = false ] && [ -z "$TARGET_MODULE" ]; then
+    show_help
+    exit 1
 fi
 
-# 4. Deep Clean Vim & Theming
-echo "📝 Purging Vim/Neovim configuration and plugins..."
-rm -rf ~/.vim
-rm -f ~/.vimrc
-rm -f ~/.viminfo
-rm -rf ~/.local/share/nvim
-rm -rf ~/.local/state/nvim
-rm -rf ~/.config/nvim
+echo "📂 Backup created at: $BACKUP_DIR"
 
-# 5. Purge Shell, P10k & Starship
-# We clean both Starship and P10k caches to prevent theme clashing on reinstall
-echo "🐚 Purging Shell, P10k, and Starship caches..."
-rm -rf ~/.local/share/zinit
-rm -rf ~/.cache/p10k-instant-prompt-*
-rm -f ~/.p10k.zsh
-rm -f ~/.zshrc
-rm -rf ~/.cache/starship
-rm -rf ~/.config/starship.toml # Ensure the config link is gone
+if [ "$CLEAN_ALL" = true ]; then
+    purge_zsh
+    purge_vim
+    purge_mise
+    purge_tmux
+    purge_starship
+elif [ -n "$TARGET_MODULE" ]; then
+    case $TARGET_MODULE in
+        zsh) purge_zsh ;;
+        vim) purge_vim ;;
+        mise) purge_mise ;;
+        tmux) purge_tmux ;;
+        starship) purge_starship ;;
+        *) echo "❌ Unknown module: $TARGET_MODULE"; exit 1 ;;
+    esac
+fi
 
-# 6. Clean Tmux Plugins
-echo "🪟 Purging Tmux plugins (TPM)..."
-rm -rf ~/.tmux/plugins
-
-# 7. Final Verification
-echo "🔍 Deleting broken symlinks in home directory..."
+# Final broken link sweep
+echo -e "\n🔍 Sweeping broken symlinks..."
 find ~ -maxdepth 2 -xtype l -delete
 
-echo "✅ Cleanup complete. All Banana modules and Catppuccin themes have been unlinked."
+echo -e "\n✨ Cleanup complete. Check $BACKUP_DIR to verify your files."

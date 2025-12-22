@@ -1,8 +1,8 @@
 #!/bin/bash
 echo "⚙️  Setup System Dependencies..."
 
-DEBIAN_PKGS=(zsh curl git vim stow gawk gettext make jq yq htop tmux tar unzip build-essential libssl-dev)
-FEDORA_PKGS=(zsh curl git vim stow gawk gettext make jq yq htop tmux tar unzip xz fontconfig gcc openssl-devel)
+DEBIAN_PKGS=(zsh curl git vim stow gawk gettext make jq htop tmux tar unzip build-essential libssl-dev)
+FEDORA_PKGS=(zsh curl git vim stow gawk gettext make jq htop tmux tar unzip xz fontconfig gcc openssl-devel)
 
 if [ -f /etc/debian_version ]; then
     echo "ℹ️  Debian base detected..."
