@@ -16,6 +16,8 @@ A "Turbo-charged" Zsh environment managed by **Zinit**, featuring **Mise** integ
 | Keybind | Action | Description |
 | :--- | :--- | :--- |
 | `Tab` | **Fzf-Tab** | Replaces standard completion with a fuzzy-searchable list. |
+| `Ctrl + t` | **File Search** | Pressing Ctrl+t should pop up a fuzzy-search window to find any file in your project and paste it into your command line. |
+| `Alt + c` | **Change Dir** | Pressing Alt+c should fuzzy-search directories and cd into them instantly. |
 | `Ctrl + r` | **History Search** | Fuzzy search through your last 10,000 commands via `fzf`. |
 | `Right Arrow` | **Accept Suggest** | Complete the command based on your history (via `zsh-autosuggestions`). |
 | `Esc Esc` | **Sudo** | Double-tap Esc to add `sudo` to the start of the current command. |

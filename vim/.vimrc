@@ -16,6 +16,9 @@ Plug 'fatih/vim-go'                " Go support (since you use Go)
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+" Theme
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+
 call plug#end()
 
 " --- General Settings ---
@@ -70,7 +73,8 @@ set listchars=tab:▸\ ,trail:·
 
 " Lightline config (makes it look nice)
 set laststatus=2
-let g:lightline = {'colorscheme': 'wombat'}
+colorscheme catppuccin_mocha
+let g:lightline = {'colorscheme': 'catppuccin_mocha'}
 
 " Ignore Go version warning"
 let g:go_version_warning = 0
