@@ -1,97 +1,81 @@
 # 🍌 Banana Dotfiles
 
-**Modular | Idempotent | DevOps-Focused**
+> A high-performance, unified development environment themed with **Catppuccin Mocha**.    
+> Optimized for Kubernetes, Terraform, and Go development.
 
-A "one-command" setup for a professional DevOps environment on Linux (Ubuntu/Fedora) and WSL2. This repository manages system dependencies, cloud-native binaries, and a unified shell experience, optimized for use with **VS Code**.
+## 🌟 The Vision
+The goal of this repository is to provide a **frictionless, context-aware workstation**. 
+- **Consistency:** If it's a terminal tool, it must use the Catppuccin Mocha palette.
+- **Portability:** Use `mise` for tool versioning so the environment is the same on every machine.
+- **Speed:** Minimal shell startup time (<20ms) using `zinit` and `p10k` instant-prompt.
+- **Visibility:** Your prompt should tell you exactly where you are (K8s, Git, AWS) without you asking.
+---
+
+## 🏗 System Architecture
+
+### 🎨 Visual Layer (The "Skin")
+- **Theme:** [Catppuccin Mocha](https://catppuccin.com/) applied across Vim, Tmux, FZF, and Zsh.
+- **Prompt:** [Powerlevel10k](https://github.com/romkatv/powerlevel10k) configured for high-contrast "Segmented" readability.
+- **Typography:** Requires a **Nerd Font** (e.g., JetBrainsMono) for DevOps iconography.
+
+### 🛠 Tooling Layer (The "Engine")
+- **Runtime Manager:** [Mise](https://mise.jdx.sh/) manages Go, Python, Node, and DevOps CLIs (kubectl, terraform).
+- **Shell:** `zsh` powered by `zinit` for lightweight plugin management.
+- **Search:** `fzf` + `ripgrep` + `fd` for unified fuzzy-searching everything.
+
+### 🍱 Module Structure
+This repo uses **GNU Stow** for symlink management. Each directory is a standalone module:
+- `/zsh`: Shell configurations and P10k theme logic.
+- `/vim`: IDE-like experience for YAML, Go, and Terraform.
+- `/tmux`: Persistent terminal sessions and window management.
+- `/mise`: Global and project-specific tool versions.
+- `/git`: Professional workflow aliases and safety defaults.
 
 ---
 
-## 🏗️ Architecture
+## 🚀 Quick Start
 
-The repo is split into modular scripts to ensure that installation is "all or nothing" and safe to run multiple times.
+### 1. Prerequisites
+Ensure you have a **Nerd Font** installed in your Terminal Emulator (e.g., Windows Terminal, iTerm2, Kitty).
 
-- **Engine:** [Mise-en-place](https://mise.jdx.dev/) (Tool version management)
-- **Shell:** Zsh + [Zinit](https://github.com/zdharma-continuum/zinit) (High-speed plugin management)
-- **Prompt:** Powerlevel10k (Visual context for K8s/Git)
-- **Symlinks:** GNU Stow
-- **Editor:** VS Code (configured to use Mise shims)
-
----
-
-## 🚀 Quick Start (Fresh Install)
-
-On a brand new Linux or WSL2 instance, run the following:
-
+### 2. Installation
 ```bash
-git clone https://github.com/magical-banana/dotfiles.git ~/dotfiles
+git clone [https://github.com/magical-banana/dotfiles.git](https://github.com/magical-banana/dotfiles.git) ~/dotfiles
 cd ~/dotfiles
-chmod +x setup.sh
 ./setup.sh
 
 ```
 
-### What happens under the hood?
+### 3. Verification
 
-1. **`install_sys_deps.sh`**: Detects OS (Apt/Dnf) and installs `git`, `curl`, `stow`, and `build-essential`.
-2. **`install_mise.sh`**: Bootstraps the Mise engine and installs **Go, Python, Terraform, Kubectl, Helm, and K9s**.
-3. **`install_zsh.sh`**: Changes default shell to Zsh and bootstraps Zinit with P10k.
-4. **`stow`**: Symlinks all configs into your `$HOME` directory.
+Run `mise ls` to ensure your runtimes are installed and `source ~/.zshrc` to refresh the UI.
 
 ---
 
-## 🛠️ Included Tools
+## 🛠 Maintenance & Contributions
 
-Managed via `mise/config.toml`:
+### Adding New Tools
 
-| Tool          | Purpose                      | Source        |
-| ------------- | ---------------------------- | ------------- |
-| **Kubectl**   | K8s Cluster Management       | Mise (Latest) |
-| **Terraform** | IaC (Infrastructure as Code) | Mise (Latest) |
-| **K9s**       | Full-screen K8s TUI          | Mise (Latest) |
-| **Go**        | Backend Development          | Mise (Latest) |
-| **FZF**       | Fuzzy Finder for CLI         | Mise (Latest) |
-| **Ripgrep**   | Ultra-fast search            | Mise (Latest) |
+1. Add the tool to `mise/config.toml`.
+2. If it's a TUI tool (like `k9s` or `lazygit`), add a Catppuccin theme file to its respective folder.
+3. Update the `setup.sh` if a specific installation script is required.
 
----
+### Resetting the Environment
 
-## 📁 Repository Structure
-
-```text
-.
-├── scripts/           # The "Brains": Modular bash scripts
-│   ├── install_sys_deps.sh
-│   ├── install_mise.sh
-│   └── install_zsh.sh
-├── zsh/               # Zshrc, P10k, and DevOps aliases
-├── mise/              # Global tool versions (config.toml)
-├── vscode/            # IDE settings and extension lists
-├── setup.sh           # Main entry point
-└── cleanup.sh         # The "Nuke" script
-
-```
-
----
-
-## 🧹 Maintenance
-
-**To update your tools and configs:**
-Simply pull the latest changes and run the setup again. It will only update what is missing.
+If the UI becomes glitchy or you want to start fresh:
 
 ```bash
+./clean.sh
 ./setup.sh
 
 ```
 
-**To remove the setup:**
-
-```bash
-./cleanup.sh
-
-```
-
 ---
 
-## 💡 VS Code Integration
+## 📜 Principles for Contributors
 
-To make VS Code use your Mise-managed tools, ensure the **Mise extension** is installed and your `settings.json` points to the shims:
-`"go.alternateTools": { "go": "~/.local/share/mise/shims/go" }`
+1. **Don't break the theme:** Every new tool should be color-synced to Mocha.
+2. **Prefer Mise over Brew/APT:** Keep tool versions locked in the repo.
+3. **Document the "Why":** Use the module READMEs to explain the workflow, not just the commands.
+
+---
