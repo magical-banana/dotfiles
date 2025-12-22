@@ -18,7 +18,7 @@ if [ -d "$FONT_DIR" ] && [ "$(ls -A "$FONT_DIR"/*.ttf 2>/dev/null)" ]; then
     echo "   - Download: https://github.com/ryanoasis/nerd-fonts/releases/latest"
     echo "   - Install the .ttf files on Windows, then restart your Terminal/VS Code."
     echo "3. VS CODE: Update 'editor.fontFamily' to include '$FONT_NAME Nerd Font'."
-    printf '%s\n' '4. Confirm this font is working by running: `echo -e "\uf17c  \uf31b  \uf308  \ue718  \ue70a`' 
+    printf '%s\n' '4. Confirm this font is working by running: `echo -e "\uf17c  \uf31b  \uf308  \ue718  \ue70a"`' 
     exit 0
 fi
 
