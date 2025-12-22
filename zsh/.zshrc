@@ -38,10 +38,15 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::terraform
 
 # History & Keybinds
-SAVEHIST=10000  # Save most-recent 10000 lines
-HISTFILE="${HOME}/.zsh_history"
+setopt INC_APPEND_HISTORY
+
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
 source <(fzf --zsh)
 bindkey '^R' fzf-history-widget 
+
 # Catppuccin Mocha for FZF
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
