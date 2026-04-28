@@ -11,3 +11,30 @@ zsh/.p10k.zsh.backup-*
 # Backup files left behind by sed -i.bak
 *.bak
 
+# Claude Code runtime state — written by the agent into the stowed ~/.claude
+# symlink, which resolves back into this repo. Only CLAUDE.md and settings.json
+# are tracked; everything else is per-machine.
+claude/.claude/.credentials.json
+claude/.claude/backups/
+claude/.claude/cache/
+claude/.claude/downloads/
+claude/.claude/file-history/
+claude/.claude/history.jsonl
+claude/.claude/ide/
+claude/.claude/paste-cache/
+claude/.claude/plans/
+claude/.claude/plugins/
+claude/.claude/projects/
+claude/.claude/session-env/
+claude/.claude/sessions/
+claude/.claude/shell-snapshots/
+claude/.claude/todos/
+.claude/
+
+# secrets/ is template-only at the repo root; the deployed copy lives in
+# ~/.config/secrets/ and is not stowed (copied verbatim by 50-git.sh)
+mise/.config/secrets/
+
+# Per-machine git state seeded under ~/.config/git/ (also not stowed)
+mise/.config/git/
+
