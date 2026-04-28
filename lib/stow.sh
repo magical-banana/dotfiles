@@ -28,6 +28,15 @@ stow_modules() {
                 README.md|.stow-local-ignore) continue ;;
             esac
             if [[ -e "$dst" && ! -L "$dst" ]]; then
+                # If $dst resolves through a parent symlink into this repo,
+                # it's already stowed (a folded-directory child). Backing it
+                # up here would `mv` the real file *out* of the repo and
+                # corrupt the working tree on every re-run. Skip those.
+                local resolved
+                resolved="$(readlink -f "$dst" 2>/dev/null || true)"
+                if [[ -n "$resolved" && "$resolved" == "$DOTFILES_ROOT/"* ]]; then
+                    continue
+                fi
                 local backup="$STOW_BACKUP_DIR/$module/$rel"
                 mkdir -p "$(dirname "$backup")"
                 log_warn "Backing up existing $dst → $backup"
