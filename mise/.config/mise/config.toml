@@ -1,59 +1,87 @@
+# Pinned tool versions — single source of truth across machines.
+# All versions verified against upstream release pages on 2026-04-28.
+# Bump deliberately: `mise outdated`, then `mise upgrade <tool>`.
+
 [tools]
-# Languages & Runtimes
-go = "1.25.5" 
-node = "24.12.0"      
-python = "3.14.0"   
-pipx = "latest"
+# --- Languages & runtimes ---
+go     = "1.26.2"            # https://go.dev/dl/
+node   = "24.15.0"           # Active LTS "Krypton". v24 LTS window ends mid-2026;
+                             # bump to v26 once it's promoted to Active LTS.
+python = "3.14.4"            # https://www.python.org/downloads/
 
-# CLI Power Tools
-fzf = "latest"
-ripgrep = "latest"  
-usage = "latest"
+# --- Package managers ---
+pipx = "1.11.1"
+uv   = "0.11.7"              # 0.11.8 shipped 2026-04-27; pin one back to soak
 
-# DevOps Tools
-k9s = "latest"
-aws-cli = "latest"
-kubectl = "latest"
-terraform = "latest"
-helm = "latest"
-ansible = "latest"
+# --- Search / nav / file tools (the agentic toolkit) ---
+fzf      = "0.72.0"
+ripgrep  = "15.1.0"
+fd       = "10.4.2"
+bat      = "0.26.1"
+delta    = "0.19.2"
+zoxide   = "0.9.9"
+eza      = "0.23.4"
+jq       = "1.8.1"
+yq       = "4.53.2"
+just     = "1.50.0"
+xh       = "0.25.3"
+
+# --- Code intelligence (agentic refactoring & review) ---
+difftastic = "0.68.0"        # AST-aware structural diffs (use as `difft`)
+ast-grep   = "0.42.1"        # code-aware structural grep (use as `sg`)
+hyperfine  = "1.20.0"        # statistical CLI benchmarking
+watchexec  = "1.20.5"        # file-watcher → run command (dev loops)
+# tealdeer is pinned via the ubi backend (Universal Binary Installer —
+# pulls a release artifact straight from GitHub) instead of the default
+# cargo backend, so we don't need a Rust toolchain just for one CLI.
+"ubi:tealdeer-rs/tealdeer" = "1.8.1"    # quick cheatsheets (binary: tldr)
+# NOTE: tokei is intentionally NOT pinned here. Upstream stopped shipping
+# binary releases in 2021 (v12.1.2 was the last). v14.0.0 is source-only,
+# so installing requires Rust. If you want tokei: `mise use -g rust@latest`
+# then add `tokei = "14.0.0"` (mise will use the cargo backend).
+
+# --- System inspection / quality of life ---
+btop      = "1.4.6"          # pretty system monitor TUI
+dust      = "1.2.4"          # tree-visualization disk usage (replaces du)
+
+# --- Git / GitHub ---
+gh       = "2.91.0"
+lazygit  = "0.61.1"
+
+# --- DevOps tools ---
+# kubectl 1.36.0 released 2026-04-22. Kubernetes version-skew policy is ±1
+# minor — pin one minor BACK if you're managing older clusters.
+kubectl   = "1.36.0"
+k9s       = "0.50.18"
+
+# Terraform is BSL since 1.6 — OpenTofu is the FOSS fork. Swap to
+# `opentofu = "..."` if license matters to your environment.
+terraform = "1.14.9"
+
+# Helm v4 is a major rewrite vs v3 — verify your charts work before pinning.
+helm      = "4.1.4"
+
+aws-cli   = "2.34.38"        # canonical: https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
+
+# The mise `ansible` plugin pip-installs the `ansible` *bundle* (not
+# ansible-core), so we pin against the PyPI `ansible` package version line.
+# Engine version: ansible-core 2.20.5 ships inside ansible 13.6.0.
+ansible   = "13.6.0"
+
+# --- Shell history (sqlite-backed, optionally syncable) ---
+atuin = "18.15.2"
+
+# --- Misc ---
+usage = "3.2.1"              # backs `mise completion`
 
 [settings]
-# tools can read the versions files used by other version managers
-# for example, .nvmrc in the case of node's nvm
+# Override only — defaults intentionally left out for noise reduction.
+# Source of truth: https://mise.jdx.dev/configuration.html
+
+experimental = true
+not_found_auto_install = true
 idiomatic_version_file_enable_tools = ['node']
+env_file = '.env'
 
-# configure `mise install` to always keep the downloaded archive
-always_keep_download = false        # deleted after install by default
-always_keep_install = false         # deleted on failure by default
-
-# configure how frequently (in minutes) to fetch updated plugin repository changes
-# this is updated whenever a new runtime is installed
-# (note: this isn't currently implemented but there are plans to add it: https://github.com/jdx/mise/discussions/6735)
-plugin_autoupdate_last_check_duration = '1 week' # set to 0 to disable updates
-
-# config files with these prefixes will be trusted by default
-# trusted_config_paths = [
-#     '~/work/my-trusted-projects',
-# ]
-
-verbose = false       # set to true to see full installation output, see `MISE_VERBOSE`
-http_timeout = "30s"  # set the timeout for http requests as duration string, see `MISE_HTTP_TIMEOUT`
-jobs = 4              # number of plugins or runtimes to install in parallel. The default is `4`.
-raw = false           # set to true to directly pipe plugins to stdin/stdout/stderr
-yes = false           # set to true to automatically answer yes to all prompts
-
-not_found_auto_install = true # see MISE_NOT_FOUND_AUTO_INSTALL
-task_output = "prefix" # see Tasks Runner for more information
-paranoid = false       # see MISE_PARANOID
-
-# shorthands_file = '~/.config/mise/shorthands.toml' # path to the shorthands file, see `MISE_SHORTHANDS_FILE`
-disable_default_shorthands = false # disable the default shorthands, see `MISE_DISABLE_DEFAULT_SHORTHANDS`
-# disable_tools = ['node']           # disable specific tools, generally used to turn off core tools
-
-env_file = '.env' # load env vars from a dotenv file, see `MISE_ENV_FILE`
-
-experimental = true # enable experimental features
-
-# configure messages displayed when entering directories with config files
+# Quieter status: only complain when a real version mismatch exists.
 status = { missing_tools = "if_other_versions_installed", show_env = false, show_tools = false }

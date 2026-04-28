@@ -9,19 +9,17 @@ The "Single Source of Truth" for your development environment. This module manag
 ## 🛠 Handled Toolchain
 Mise ensures that the exact same versions of these tools are used across your WSL2, Linux, and Dev environments.
 
-### **Languages & Runtimes**
-* **Go (`1.25.5`)**: High-performance backend development.
-* **Node (`24.12.0`)**: JavaScript runtime (configured to read `.nvmrc` files automatically).
-* **Python (`3.14.0`)**: Scripting and automation.
-* **Pipx**: Isolated installation for Python CLI tools.
+All version pins live in [`.config/mise/config.toml`](./.config/mise/config.toml) — the single source of truth. Categories tracked there:
 
-### **DevOps & Cloud Stack**
-* **Infrastructure:** `Terraform`, `Ansible`, `Helm`.
-* **Kubernetes:** `kubectl` and the `k9s` TUI dashboard.
-* **AWS:** `aws-cli` for cloud resource management.
+- **Runtimes:** Go, Node (LTS), Python, plus `pipx` and `uv` for Python tooling.
+- **DevOps stack:** `terraform`, `ansible-core`, `helm`, `kubectl`, `k9s`, `aws-cli`.
+- **Agentic CLIs:** `fzf`, `ripgrep`, `fd`, `bat`, `delta`, `gh`, `jq`, `yq`, `zoxide`, `eza`, `lazygit`, `just`, `xh`, `atuin`.
 
-### **CLI Power Tools**
-* **Search:** `fzf` (Fuzzy Finder) and `ripgrep` (Fast Search).
+Versions are bumped deliberately, not on a schedule:
+```bash
+mise outdated            # show what's behind
+mise upgrade <tool>      # bump and update config.toml
+```
 
 ---
 
@@ -45,9 +43,6 @@ Mise ensures that the exact same versions of these tools are used across your WS
 
 ### 🌐 Version File Support
 The `node` tool is set to `idiomatic_version_file_enable_tools`. This means Mise will respect `.nvmrc` or `.node-version` files found in specific projects, overriding the global version.
-
-### 🏗️ Parallelism
-Configured with `jobs = 4`, allowing Mise to install up to 4 runtimes or plugins simultaneously for faster environment bootstrapping.
 
 ### 🛡️ Experimental Features
 `experimental = true` is enabled to support the latest Mise features, including improved task running and environment variable management.

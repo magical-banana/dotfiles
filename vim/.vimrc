@@ -16,10 +16,16 @@ Plug 'fatih/vim-go'                " Go support (since you use Go)
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-" Theme
-Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+" Theme — Gotham (whatyouhide/vim-gotham)
+" Ships its own lightline colorscheme as autoload/lightline/colorscheme/gotham.vim
+Plug 'whatyouhide/vim-gotham'
 
 call plug#end()
+
+" --- Theme activation ---
+" Must come AFTER plug#end() so the colorscheme is loaded.
+" `silent!` so vim doesn't error on first launch (before PlugInstall has run).
+silent! colorscheme gotham
 
 " --- General Settings ---
 set nocompatible            " Use Vim defaults instead of Vi
@@ -27,7 +33,17 @@ set encoding=utf-8          " Standard encoding
 set number                  " Show line numbers
 set relativenumber          " Great for jumping lines quickly (e.g., 5j)
 set mouse=a                 " Enable mouse support for scrolling/selection
-set clipboard=unnamedplus   " Use system clipboard
+" System clipboard — `unnamedplus` requires +clipboard. On WSL, vim won't
+" find a clipboard provider by default, so we proxy yanks through clip.exe.
+set clipboard=unnamedplus
+if !empty($WSL_DISTRO_NAME) || (filereadable('/proc/version') && match(readfile('/proc/version'), '\cmicrosoft\|wsl') >= 0)
+    if executable('clip.exe')
+        augroup WSLYank
+            autocmd!
+            autocmd TextYankPost * if v:event.operator ==# 'y' | call system('clip.exe', join(v:event.regcontents, "\n")) | endif
+        augroup END
+    endif
+endif
 set hidden                  " Switch buffers without saving
 set noswapfile              " Skip swap files (we save often anyway)
 
@@ -73,7 +89,7 @@ set listchars=tab:▸\ ,trail:·
 
 " Lightline config (makes it look nice)
 set laststatus=2
-let g:lightline = {'colorscheme': 'catppuccin_mocha'}
+let g:lightline = {'colorscheme': 'gotham'}
 
 " Ignore Go version warning"
 let g:go_version_warning = 0

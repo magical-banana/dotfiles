@@ -1,2 +1,13 @@
 .gitconfig.local
 
+# Per-machine zsh drop-ins (loaded by ~/.zshrc, lives inside the symlinked
+# .zshrc.d/ directory but never committed). Use the zz- prefix to ensure
+# they sort after the numbered, tracked drop-ins.
+zsh/.zshrc.d/zz-*.zsh
+
+# Backups created when re-running p10k configure
+zsh/.p10k.zsh.backup-*
+
+# Backup files left behind by sed -i.bak
+*.bak
+
