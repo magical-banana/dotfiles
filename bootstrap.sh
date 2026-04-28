@@ -67,6 +67,9 @@ main() {
 
     # 2. Mise (the meta-tool that installs the rest of the runtimes).
     run_step "20-mise.sh"
+    # 20-mise.sh exports PATH inside its own subshell — re-add ~/.local/bin
+    # here so this parent shell can invoke mise on a fresh install.
+    export PATH="$HOME/.local/bin:$PATH"
 
     # 3. Symlink the configs. Must happen BEFORE `mise install` so that
     #    ~/.config/mise/config.toml exists.
@@ -87,6 +90,9 @@ main() {
         # Force bash so zsh-syntax in eval doesn't bite us.
         eval "$(mise activate bash)"
         mise install -y 2>&1 | tee -a "$LOG_FILE" | indent
+        # Make mise-installed binaries (gh, rg, fd, …) visible to the remaining
+        # step scripts, which run in subshells that don't inherit the activate.
+        export PATH="$HOME/.local/share/mise/shims:$PATH"
     fi
 
     # 5. Remaining provisioning steps. Each one is individually idempotent.
